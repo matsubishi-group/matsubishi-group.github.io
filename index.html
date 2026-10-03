@@ -22,9 +22,12 @@ header{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(7,20,38,.9
 .logo small{display:block;font-size:10px;opacity:.65;letter-spacing:.18em}
 nav ul{display:flex;gap:28px;list-style:none;font-size:14px}
 nav a{opacity:.9} nav a:hover{opacity:1;color:#7ddcff}
-.hero{min-height:92vh;background:linear-gradient(120deg,rgba(7,20,38,.88),rgba(7,55,91,.55)),url("https://images.unsplash.com/photo-1705486935094-c2642defcc8e?auto=format&fit=crop&fm=jpg&q=85&w=1800") center/cover no-repeat;
-color:#fff;display:flex;align-items:center;padding-top:74px;position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;width:700px;height:700px;border:1px solid rgba(125,220,255,.18);border-radius:50%;right:-250px;top:10%;box-shadow:0 0 0 70px rgba(125,220,255,.025),0 0 0 140px rgba(125,220,255,.02)}
+.hero{min-height:92vh;background:#071426;color:#fff;display:flex;align-items:center;padding-top:74px;position:relative;overflow:hidden}
+.hero-slides{position:absolute;inset:0;z-index:0;background:#071426}
+.hero-slide{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity 1s ease-in-out}
+.hero-slide.active{opacity:1}
+.hero-slide:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(7,20,38,.86),rgba(7,55,91,.48))}
+.hero:after{content:"";position:absolute;width:700px;height:700px;border:1px solid rgba(125,220,255,.18);border-radius:50%;right:-250px;top:10%;box-shadow:0 0 0 70px rgba(125,220,255,.025),0 0 0 140px rgba(125,220,255,.02);z-index:1}
 .hero-content{position:relative;z-index:2;padding:90px 0 110px;max-width:800px}
 .kicker{color:#7ddcff;font-weight:700;letter-spacing:.18em;font-size:13px;margin-bottom:18px}
 .hero h1{font-size:clamp(42px,7vw,82px);line-height:1.03;letter-spacing:-.04em;margin-bottom:24px}
@@ -35,6 +38,7 @@ color:#fff;display:flex;align-items:center;padding-top:74px;position:relative;ov
 .btn.primary{background:#fff;color:var(--navy);border-color:#fff}
 .btn:hover{transform:translateY(-2px)}
 .section{padding:100px 0}
+.video-section{padding-top:20px}
 .section.alt{background:var(--light)}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:42px}
 .eyebrow{font-size:12px;letter-spacing:.2em;color:var(--blue);font-weight:800}
@@ -68,6 +72,7 @@ footer{background:#050e1a;color:#b9c7d2;padding:55px 0 25px}
 @media(max-width:800px){
  nav ul{display:none}
  .section{padding:70px 0}
+ .video-section{padding-top:20px}
  .grid{grid-template-columns:1fr}
  .about{grid-template-columns:1fr;gap:30px}
  .section-head{display:block}
@@ -121,6 +126,12 @@ footer{background:#050e1a;color:#b9c7d2;padding:55px 0 25px}
 
 <main id="top">
 <section class="hero">
+  <div class="hero-slides" aria-hidden="true">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1586963312987-3c96f9ace15a?auto=format&fit=crop&fm=jpg&q=85&w=1800')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1764285337938-9da4acdee3ca?auto=format&fit=crop&fm=jpg&q=85&w=1800')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1576165767834-a2ad08f13264?auto=format&fit=crop&fm=jpg&q=85&w=1800')"></div>
+    <div class="hero-slide" style="background-image:url('hero-modern-it.png')"></div>
+  </div>
   <div class="container hero-content">
     <div class="kicker">MATSUBISHI GROUP / CORPORATE SITE</div>
     <h1>未来を、<span>動かす。</span></h1>
@@ -156,6 +167,17 @@ footer{background:#050e1a;color:#b9c7d2;padding:55px 0 25px}
   </div>
 </section>
 
+<section class="section video-section" id="video">
+  <div class="container">
+    <div style="max-width:1100px;margin:0 auto;">
+      <h2 style="text-align:center;margin-bottom:28px;">紹介動画</h2>
+      <video controls playsinline preload="metadata" style="display:block;width:100%;height:auto;border-radius:22px;box-shadow:0 18px 45px rgba(7,20,38,.14);background:#071426;">
+        <source src="紹介動画.mp4" type="video/mp4">
+        お使いのブラウザでは動画を再生できません。
+      </video>
+    </div>
+  </div>
+</section>
 
 <section style="height:340px;background:linear-gradient(90deg,rgba(7,20,38,.68),rgba(7,20,38,.22)),url('https://images.unsplash.com/photo-1769265114267-9b3c74e14a54?auto=format&fit=crop&fm=jpg&q=85&w=1800') center/cover no-repeat;display:flex;align-items:center;color:#fff">
   <div class="container">
@@ -285,5 +307,18 @@ footer{background:#050e1a;color:#b9c7d2;padding:55px 0 25px}
     <div class="copyright">© 2026 MATSUBISHI GROUP. All Rights Reserved.　|　背景写真：Unsplash（各写真はUnsplash Licenseに基づき使用）</div>
   </div>
 </footer>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.hero-slide');
+  if (!slides.length) return;
+  let index = 0;
+  setInterval(function(){
+    slides[index].classList.remove('active');
+    index = (index + 1) % slides.length;
+    slides[index].classList.add('active');
+  }, 2000);
+})();
+</script>
 </body>
 </html>
